@@ -1,0 +1,18 @@
+<html>
+<head>
+    <title>Sentiment Analysis Results</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Results</h1>
+        <div class="result-content">
+            <p><strong>Original Text:</strong></p>
+            <p>{{ text }}</p>
+            <p><strong>Sentiment:</strong> {{ sentiment }}</p>
+            <p><strong>Confidence:</strong> {{ confidence }}</p>
+        </div>
+        <a href="/" class="back-link">Back</a>
+    </div>
+</body>
+</html>
