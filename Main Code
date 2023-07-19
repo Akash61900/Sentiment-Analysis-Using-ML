@@ -1,0 +1,87 @@
+import numpy as np 
+import pandas as pd 
+import matplotlib.pyplot as plt 
+
+from sklearn.utils import shuffle
+import re
+import nltk
+nltk.download('stopwords')
+
+import time
+import warnings
+warnings.filterwarnings("ignore")
+from nltk.corpus import stopwords
+
+from nltk.stem.porter import PorterStemmer
+from nltk.stem import LancasterStemmer
+from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import LabelEncoder
+
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics import confusion_matrix, accuracy_score, classification_report
+
+from sklearn.linear_model import LogisticRegression
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+import xgboost as xgb
+
+import re
+import nltk
+nltk.download('stopwords')
+from nltk.corpus import stopwords
+from nltk.stem.porter import PorterStemmer
+import string
+import itertools 
+from nltk.stem import WordNetLemmatizer
+from string import punctuation
+data_cols = ['target', 'ids', 'date', 'flag' ,'user', 'text']
+data = pd.read_csv('/kaggle/input/sentiment140/training.1600000.processed.noemoticon.csv', header=None, encoding='ISO-8859-1',names = data_cols)
+
+data.head()
+data.iloc[-1]
+df = shuffle(data, random_state=45)
+data = df[1:600000]
+data['target'].value_counts() 
+def cleaner(text):
+    txt = re.sub('[^a-zA-Z]',' ',text) 
+    txt = txt.lower()
+    txt = txt.split()
+    ps = LancasterStemmer()
+    all_stopwords = stopwords.words('english')
+    all_stopwords.remove('not')
+    txt = [ps.stem(word) for word in txt if not word in set(all_stopwords)]
+    return ' '.join(txt)
+    data['text'] = data['text'].apply(lambda x: cleaner(x))
+    data
+    y = data['target']
+le = LabelEncoder()
+y = le.fit_transform(y)
+X_train, X_test, y_train, y_test = train_test_split(data['text'], y, test_size = 0.20, random_state = 45)
+tfidf = TfidfVectorizer(max_features = 600)
+X_train = tfidf.fit_transform(X_train).toarray() 
+X_test = tfidf.transform(X_test).toarray()
+X_train.shape, X_test.shape
+classifier = LogisticRegression(random_state = 0)
+classifier.fit(X_train, y_train) 
+
+y_pred = classifier.predict(X_test)
+print(accuracy_score(y_test, y_pred))
+print(confusion_matrix(y_test, y_pred))
+print(classification_report(y_test, y_pred))
+RF = RandomForestClassifier()
+RF.fit(X_train, y_train)
+y_pred_rf = RF.predict(X_test)
+print(accuracy_score(y_test, y_pred_rf))
+print(confusion_matrix(y_test, y_pred_rf))
+print(classification_report(y_test, y_pred_rf))
+from sklearn.naive_bayes import GaussianNB
+
+nbc = GaussianNB()
+nbc.fit(X_train, y_train)
+y_pred_nbc = nbc.predict(X_test)
+print(accuracy_score(y_test, y_pred_nbc))
+print(confusion_matrix(y_test, y_pred_nbc))
+print(classification_report(y_test, y_pred_nbc))
