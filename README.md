@@ -1,1 +1,2 @@
 # Sentiment-Analysis-Using-ML
+For this Sentiment Analysis Model I had used seven ML Algorithms which includes Decision Tree, Support Vector Machine, Logistic Regression, Random Forest, Naive Bayes, Light Gradient Boosting Machine and Stochastic Gradient Descent. I have used various libraries such as NLP,NLTK,Wordcloud, Keras Etc.I have achieved 81% (approx) accuracy for this model. And for the deployment of the model I have used Flask, WSGI And Jinga2.
